@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>ODDMOON LAB - 카카오 이모티콘 작업실</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{font-family:'Inter','Noto Sans KR',-apple-system,sans-serif;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;}
+input,textarea{-webkit-user-select:text;user-select:text;}
+:root{--bg:#f7f6f3;--surface:#ffffff;--border:#dddbd5;--text-primary:#141412;--text-secondary:#5c5b58;--text-muted:#9e9d99;--radius:14px;}
+body{background:var(--bg);color:var(--text-primary);}
+#view-hub{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:100vh;padding:40px 24px;}
+header{text-align:center;margin-bottom:44px;}
+header .eyebrow{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;}
+header h1{font-size:40px;font-weight:900;letter-spacing:-1.6px;line-height:1.2;}
+header h1 .line2{display:inline-block;border-bottom:4px solid var(--text-primary);padding-bottom:3px;}
+header .teacher{margin-top:18px;font-size:23px;font-weight:500;color:#5c5b58;letter-spacing:.5px;}
+.student-only-notice{display:inline-flex;align-items:center;gap:6px;max-width:100%;margin:-20px auto 28px;padding:5px 14px;background:#fdf6dc;border:1px solid #ecd27a;border-radius:999px;color:#4a3d10;font-size:13px;line-height:1.5;word-break:keep-all}
+.grid{display:flex;gap:14px;justify-content:center;width:100%;max-width:640px;visibility:hidden;}
+.card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:26px 12px 22px;text-decoration:none;color:var(--text-primary);flex:1;min-width:0;cursor:pointer;transition:transform .18s,box-shadow .18s,background .18s,border-color .18s;touch-action:manipulation;}
+.card:hover{transform:translateY(-4px);box-shadow:0 6px 22px rgba(0,0,0,.09);background:#f0eeea;border-color:#b8b6b0;}
+.card-icon{width:52px;height:52px;display:flex;align-items:center;justify-content:center;}
+.card-icon svg{width:46px;height:46px;}
+.card-label{font-size:10.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;text-align:center;}
+.card-desc{font-size:11px;color:var(--text-muted);font-weight:500;margin-top:-6px;}
+.empty-msg{display:none;font-size:13px;color:var(--text-muted);margin-top:8px;}
+footer{margin-top:40px;display:flex;align-items:center;gap:14px;}
+.copyright-notice{margin-top:16px;font-size:10px;line-height:1.7;color:var(--text-muted);text-align:center;max-width:440px;padding:0 16px;}
+.social-link{width:38px;height:38px;border:1.5px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--surface);cursor:pointer;text-decoration:none;}
+.social-link svg{width:16px;height:16px;stroke:var(--text-secondary);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+#copy-toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(8px);background:#1a7a4a;color:#fff;font-size:13px;font-weight:600;padding:12px 24px;border-radius:12px;opacity:0;pointer-events:none;transition:opacity .28s,transform .28s;white-space:nowrap;z-index:300;}
+#copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+#unlock-btn{position:fixed;bottom:22px;right:22px;width:42px;height:42px;border-radius:50%;background:var(--text-primary);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 14px rgba(0,0,0,.2);z-index:100;}
+#unlock-btn svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+#lock-badge{position:fixed;bottom:70px;right:16px;font-size:9px;font-weight:700;letter-spacing:1px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:3px 8px;color:var(--text-muted);z-index:100;pointer-events:none;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.42);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);z-index:200;align-items:center;justify-content:center;}
+.overlay.active{display:flex;}
+@keyframes popIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+.modal{background:var(--surface);border-radius:18px;padding:34px 28px;width:310px;box-shadow:0 24px 64px rgba(0,0,0,.18);text-align:center;animation:popIn .22s cubic-bezier(.34,1.56,.64,1);}
+.modal h2{font-size:16px;font-weight:800;margin-bottom:5px;}
+.modal p{font-size:12px;color:var(--text-secondary);margin-bottom:20px;}
+.modal input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:20px;outline:none;text-align:center;letter-spacing:8px;margin-bottom:12px;}
+.modal input.shake{animation:shake .32s ease;border-color:#e53e3e;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.modal-btns{display:flex;gap:8px;}
+.btn-primary{flex:1;padding:11px;background:var(--text-primary);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;}
+.btn-secondary{flex:1;padding:11px;background:var(--bg);color:var(--text-secondary);border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;}
+.error-msg{font-size:11px;color:#e53e3e;margin-top:-5px;margin-bottom:10px;min-height:15px;}
+.admin-panel{background:var(--surface);border-radius:20px;padding:32px 28px;width:360px;max-width:92vw;box-shadow:0 24px 64px rgba(0,0,0,.18);animation:popIn .22s cubic-bezier(.34,1.56,.64,1);}
+.admin-panel h2{font-size:17px;font-weight:800;margin-bottom:4px;}
+.admin-sub{font-size:12px;color:var(--text-muted);margin-bottom:24px;}
+.menu-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--border);}
+.menu-row:last-of-type{border-bottom:none;}
+.menu-info{display:flex;align-items:center;gap:11px;}
+.menu-dot{width:8px;height:8px;border-radius:50%;background:#d0cec9;flex-shrink:0;}
+.menu-dot.on{background:#2ecc71;}
+.menu-name{font-size:14px;font-weight:600;}
+.menu-file{font-size:11px;color:var(--text-muted);margin-top:1px;}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;}
+.slider{position:absolute;inset:0;background:#d0cec9;border-radius:24px;cursor:pointer;transition:background .22s;}
+.slider::before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;left:3px;top:3px;transition:transform .22s;box-shadow:0 1px 4px rgba(0,0,0,.15);}
+.toggle input:checked + .slider{background:#141412;}
+.toggle input:checked + .slider::before{transform:translateX(20px);}
+.admin-close{width:100%;margin-top:22px;padding:12px;background:var(--text-primary);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;}
+.admin-sync-status{font-size:11px;color:var(--text-muted);text-align:center;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
+.admin-sync-status.ok{color:#1a7a4a;}
+.admin-sync-status.off{color:#c0392b;}
+@keyframes fadeCard{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+#blocked{position:fixed;inset:0;background:#f7f6f3;z-index:9999;display:none;place-items:center;text-align:center;padding:30px;font-size:14px;color:#333}
+#blocked b{display:block;font-size:20px;margin-bottom:8px}
+@media (max-width:620px){header h1{font-size:28px;}}
+</style>
+</head>
+<body>
+<div id="blocked"><div><b>접근할 수 없는 주소예요</b>이 페이지는 ODDMOON LAB 수업 페이지(oddmoonlab.github.io)에서만 사용할 수 있어요.<br><small style="color:#888">© 2026 ODDMOON LAB · 유여진 강사</small></div></div>
+
+<div id="view-hub">
+  <header>
+    <div class="eyebrow">Kakao Emoticon Workspace</div>
+    <h1><span class="line2">카카오 이모티콘 작업실</span></h1>
+    <p class="teacher">유여진 강사</p>
+  </header>
+
+  <div class="student-only-notice" role="note"><span>⚠️</span><span>수강생 전용 페이지예요. 이 주소를 다른 사람에게 공유하거나 SNS·카페 등에 올리지 마세요.</span></div>
+
+  <div class="grid" id="hubGrid">
+    <a class="card" id="kakao-plan" href="/kakaoplan/">
+      <div class="card-icon"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><rect fill="#141412" x="8" y="4" width="32" height="40" rx="4"/><rect fill="#fff" x="12" y="10" width="24" height="3" rx="1.5"/><rect fill="#fff" x="12" y="17" width="24" height="3" rx="1.5"/><rect fill="#fff" x="12" y="24" width="16" height="3" rx="1.5"/><circle fill="#fff" cx="31" cy="34" r="5"/><path fill="#141412" d="M29 34l1.5 1.5L33.5 32" stroke="#141412" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="card-label">기획노트</div>
+      <div class="card-desc">테마 · 소재 · 콘티</div>
+    </a>
+    <a class="card" id="kakao-outline" href="/kakaooutline/">
+      <div class="card-icon"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path fill="#141412" d="M24 3c11.6 0 21 9.4 21 21 0 3-.6 5.8-1.8 8.4L32.4 43.2C29.8 44.4 27 45 24 45 12.4 45 3 35.6 3 24S12.4 3 24 3z"/><path fill="#fff" d="M24 8C15.2 8 8 15.2 8 24s7.2 16 16 16c1.6 0 3.2-.2 4.6-.7V32c0-1.9 1.5-3.4 3.4-3.4h7.3c.5-1.4.7-3 .7-4.6 0-8.8-7.2-16-16-16z"/><circle fill="#141412" cx="18" cy="21" r="2.6"/><circle fill="#141412" cx="30" cy="21" r="2.6"/><path d="M18 28c3.2 3 8.8 3 12 0" stroke="#141412" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg></div>
+      <div class="card-label">Kakao Outline</div>
+      <div class="card-desc">스티커 테두리</div>
+    </a>
+    <a class="card" id="kakao-view" href="/kakakoview/">
+      <div class="card-icon"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path fill="#141412" d="M24 5C12.4 5 3 12.6 3 22c0 6 3.9 11.3 9.7 14.3L11 44l8.6-5.6c1.4.2 2.9.3 4.4.3 11.6 0 21-7.6 21-17S35.6 5 24 5z"/><circle fill="#fff" cx="15" cy="22" r="3"/><circle fill="#fff" cx="24" cy="22" r="3"/><circle fill="#fff" cx="33" cy="22" r="3"/></svg></div>
+      <div class="card-label">Kakao Viewer</div>
+      <div class="card-desc">카톡 미리보기</div>
+    </a>
+  </div>
+  <div class="empty-msg" id="emptyMsg">지금은 열린 메뉴가 없어요. 선생님 안내를 기다려 주세요.</div>
+
+  <footer>
+    <button class="social-link" id="email-btn" title="이메일 주소 복사"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></button>
+    <a class="social-link ig-link" href="#" data-ig-href="https://www.instagram.com/oddmoon_lab/" title="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+  </footer>
+  <div class="copyright-notice">© 2026 ODDMOON LAB · 유여진 강사. All rights reserved.<br>본 페이지의 코드, 디자인, 이미지를 무단으로 복제·수정·재배포하는 것을 금지합니다.</div>
+</div>
+
+<div id="copy-toast">✅ 이메일 주소가 복사되었습니다 — oddmoonillust@naver.com</div>
+<button id="unlock-btn" title="선생님 관리 패널"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>
+<div id="lock-badge">TEACHER</div>
+
+<div class="overlay" id="pw-overlay">
+  <div class="modal">
+    <h2>선생님 관리 패널</h2>
+    <p>비밀번호를 입력하세요</p>
+    <input type="password" id="pw-input" inputmode="numeric" autocomplete="off" placeholder="· · · ·" maxlength="20">
+    <div class="error-msg" id="error-msg"></div>
+    <div class="modal-btns">
+      <button class="btn-primary" id="pw-ok">확인</button>
+      <button class="btn-secondary" id="pw-cancel">취소</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="admin-overlay">
+  <div class="admin-panel">
+    <h2>🎛️ 메뉴 관리</h2>
+    <div class="admin-sub">카카오 작업실 메뉴만 켜고 꺼요 · 학생 화면에 최대 4초 안에 반영돼요</div>
+    <div id="toggle-list"></div>
+    <div class="admin-sync-status" id="admin-sync-status">상태 확인 중...</div>
+    <button class="admin-close" id="admin-close">닫기</button>
+  </div>
+</div>
+
+<script>
+/* =====================================================
+   🔧 관리자 설정
+   - 비밀번호, 메뉴 목록
+   - DOMAIN_LOCK: true면 oddmoonlab.github.io 에서만 열려요 (미리보기할 땐 false)
+   - 이 작업실은 menu_state 표의 kakao-plan / kakao-outline / kakao-view 줄만 읽고 써요.
+     (기존 우리반 작업실의 card-ogq 등과는 서로 영향 없음)
+   ===================================================== */
+const ADMIN_PW = "0530";
+const DOMAIN_LOCK = true;
+const MENUS = [
+  { id:'kakao-plan',    label:'기획노트',      file:'/kakaoplan/' },
+  { id:'kakao-outline', label:'KAKAO OUTLINE', file:'/kakaooutline/' },
+  { id:'kakao-view',    label:'KAKAO VIEWER',  file:'/kakakoview/' },
+];
+const SUPABASE_URL = "https://kgjbxhxknxgbmsihvshe.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_1K_wet7KC7fq7aPn6vB5dQ_nldPYACn";
+
+(function(){
+  /* ── 복제 방지 · 주소 잠금 ── */
+  const okHost = location.protocol === 'file:' || location.hostname === 'oddmoonlab.github.io';
+  if (DOMAIN_LOCK && !okHost) { document.getElementById('blocked').style.display = 'grid'; return; }
+  const isField = el => el && /^(INPUT|TEXTAREA)$/.test(el.tagName);
+  document.addEventListener('contextmenu', e => { if (!isField(e.target)) e.preventDefault(); });
+  document.addEventListener('dragstart', e => { if (!isField(e.target)) e.preventDefault(); });
+  document.addEventListener('keydown', e => {
+    const k = (e.key||'').toLowerCase(), m = e.ctrlKey || e.metaKey;
+    if (e.key === 'F12' || (m && ['s','u','p'].includes(k)) || (m && e.shiftKey && ['i','j','c'].includes(k))) e.preventDefault();
+  });
+
+  const $ = id => document.getElementById(id);
+  const state = { 'kakao-plan': true, 'kakao-outline': true, 'kakao-view': true, 'instagram-link': true };
+  const headers = { apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + SUPABASE_ANON_KEY };
+  const ids = ['kakao-plan','kakao-outline','kakao-view','instagram-link'];
+
+  function applyVisibility(){
+    let shown = 0;
+    MENUS.forEach(m => { const el = $(m.id); if (!el) return;
+      if (state[m.id]) { if (el.style.display === 'none') el.style.animation = 'fadeCard .32s ease'; el.style.display = 'flex'; shown++; }
+      else el.style.display = 'none'; });
+    $('emptyMsg').style.display = shown ? 'none' : 'block';
+  }
+  function setSync(ok){
+    const el = $('admin-sync-status'); if (!el) return;
+    el.className = 'admin-sync-status ' + (ok ? 'ok' : 'off');
+    el.textContent = ok ? '🟢 Supabase 연동됨 — 학생 화면에 자동 반영' : '🔴 Supabase 연결 오류 (표에 kakao-plan / kakao-outline / kakao-view 줄이 있는지 확인)';
+  }
+  async function sync(){
+    try {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/menu_state?select=id,is_open&id=in.(${ids.join(',')})`, { headers });
+      if (!r.ok) throw new Error(r.status);
+      const rows = await r.json(); let changed = false;
+      rows.forEach(row => { if (row.id in state && state[row.id] !== row.is_open) { state[row.id] = row.is_open; changed = true; } });
+      setSync(['kakao-plan','kakao-outline','kakao-view'].every(k => rows.some(x => x.id === k)));
+      if (changed) { applyVisibility(); refreshToggles(); }
+    } catch(e) { setSync(false); }
+    $('hubGrid').style.visibility = 'visible';
+  }
+  async function update(id, on){
+    try {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/menu_state?id=eq.${id}`, { method:'PATCH', headers: {...headers, 'Content-Type':'application/json', Prefer:'return=representation'}, body: JSON.stringify({ is_open:on, updated_at:new Date().toISOString() }) });
+      if (!r.ok) throw new Error(r.status);
+      const rows = await r.json(); setSync(rows.length > 0);
+    } catch(e) { setSync(false); }
+  }
+
+  /* ── 이메일 복사 ── */
+  $('email-btn').addEventListener('click', async () => {
+    const MAIL = 'oddmoonillust@naver.com'; let ok = false;
+    try { await navigator.clipboard.writeText(MAIL); ok = true; } catch(e) {}
+    if (!ok) { const ta = document.createElement('textarea'); ta.value = MAIL; ta.style.cssText='position:fixed;opacity:0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch(e) {} ta.remove(); }
+    const t = $('copy-toast'); t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200);
+  });
+  /* ── 인스타 (기존 작업실과 같은 설정을 따라감) ── */
+  document.querySelector('.ig-link').addEventListener('click', e => { e.preventDefault(); if (state['instagram-link']) window.open(e.currentTarget.dataset.igHref, '_blank', 'noopener'); });
+
+  /* ── 관리자 ── */
+  const pwIn = $('pw-input');
+  $('unlock-btn').addEventListener('click', () => { $('pw-overlay').classList.add('active'); setTimeout(() => pwIn.focus(), 80); });
+  const closePw = () => { $('pw-overlay').classList.remove('active'); pwIn.value=''; $('error-msg').textContent=''; };
+  $('pw-cancel').addEventListener('click', closePw);
+  const confirmPw = () => {
+    if (pwIn.value === ADMIN_PW) { closePw(); openAdmin(); }
+    else { pwIn.classList.add('shake'); $('error-msg').textContent='비밀번호가 올바르지 않습니다.'; pwIn.value=''; setTimeout(() => pwIn.classList.remove('shake'), 350); }
+  };
+  $('pw-ok').addEventListener('click', confirmPw);
+  pwIn.addEventListener('keydown', e => { if (e.key === 'Enter') confirmPw(); });
+  function refreshToggles(){
+    MENUS.forEach(m => { const t = $('tg-'+m.id), d = $('dot-'+m.id); if (t) t.checked = !!state[m.id]; if (d) d.className = 'menu-dot' + (state[m.id] ? ' on' : ''); });
+  }
+  function openAdmin(){
+    $('toggle-list').innerHTML = MENUS.map(m => `<div class="menu-row"><div class="menu-info"><div class="menu-dot ${state[m.id]?'on':''}" id="dot-${m.id}"></div><div><div class="menu-name">${m.label}</div><div class="menu-file">${m.file}</div></div></div><label class="toggle"><input type="checkbox" id="tg-${m.id}" data-id="${m.id}" ${state[m.id]?'checked':''}><span class="slider"></span></label></div>`).join('');
+    $('admin-overlay').classList.add('active'); sync();
+  }
+  $('toggle-list').addEventListener('change', e => {
+    const id = e.target.dataset.id; if (!id) return;
+    state[id] = e.target.checked; refreshToggles(); applyVisibility(); update(id, e.target.checked);
+  });
+  $('admin-close').addEventListener('click', () => $('admin-overlay').classList.remove('active'));
+  ['pw-overlay','admin-overlay'].forEach(o => $(o).addEventListener('click', e => { if (e.target.id === o) $(o).classList.remove('active'); }));
+
+  applyVisibility(); sync(); setInterval(sync, 4000);
+  setTimeout(() => { $('hubGrid').style.visibility = 'visible'; }, 2500); /* 연결이 늦어도 2.5초 뒤엔 보여줌 */
+})();
+</script>
+</body>
+</html>
