@@ -44,7 +44,10 @@ footer{margin-top:40px;display:flex;align-items:center;gap:14px;}
 .modal{background:var(--surface);border-radius:18px;padding:34px 28px;width:310px;box-shadow:0 24px 64px rgba(0,0,0,.18);text-align:center;animation:popIn .22s cubic-bezier(.34,1.56,.64,1);}
 .modal h2{font-size:16px;font-weight:800;margin-bottom:5px;}
 .modal p{font-size:12px;color:var(--text-secondary);margin-bottom:20px;}
-.modal input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:20px;outline:none;text-align:center;letter-spacing:8px;margin-bottom:12px;}
+.modal input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:16px;outline:none;margin-bottom:8px;}
+.modal input:focus{border-color:#141412;}
+.modal button:disabled{opacity:.6;cursor:wait;}
+.admin-logout{width:100%;margin-top:8px;padding:10px;background:none;border:none;font-family:inherit;font-size:12px;font-weight:600;color:var(--text-muted);cursor:pointer;text-decoration:underline;}
 .modal input.shake{animation:shake .32s ease;border-color:#e53e3e;}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
 .modal-btns{display:flex;gap:8px;}
@@ -74,6 +77,54 @@ footer{margin-top:40px;display:flex;align-items:center;gap:14px;}
 @keyframes fadeCard{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
 #blocked{position:fixed;inset:0;background:#f7f6f3;z-index:9999;display:none;place-items:center;text-align:center;padding:30px;font-size:14px;color:#333}
 #blocked b{display:block;font-size:20px;margin-bottom:8px}
+/* ── 공지 · 수업자료 버튼 ── */
+#view-hub{position:relative;}
+.top-actions{position:absolute;top:42px;right:62px;display:flex;gap:8px;z-index:50;visibility:hidden;}
+.pill-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;padding:10px 22px;background:#141412;color:#fff;border:none;border-radius:999px;font-family:inherit;font-size:13px;font-weight:800;letter-spacing:.3px;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.18);transition:transform .15s,background .2s,color .2s;touch-action:manipulation;}
+.pill-btn:hover{transform:translateY(-2px);}
+.pill-btn.off,.pill-btn:disabled{background:#c9c7c2;color:#f4f3f0;box-shadow:none;cursor:not-allowed;pointer-events:none;transform:none;}
+.pill-btn .new-dot{position:absolute;top:-3px;right:-3px;width:11px;height:11px;border-radius:50%;background:#e8452c;border:2px solid var(--bg);display:none;}
+.pill-btn.has-new .new-dot{display:block;}
+.pill-btn.off .new-dot{display:none;}
+/* 메모지 팝업 */
+.memo-wrap{position:relative;width:min(460px,92vw);animation:popIn .22s cubic-bezier(.34,1.56,.64,1);}
+.memo-wrap::before{content:'';position:absolute;top:-12px;left:50%;transform:translateX(-50%) rotate(-2deg);width:110px;height:28px;background:rgba(236,210,122,.78);border-radius:2px;z-index:3;box-shadow:0 1px 3px rgba(0,0,0,.08);}
+.memo{position:relative;max-height:82vh;overflow-y:auto;background-color:#fffdf5;background-image:linear-gradient(90deg,transparent 40px,rgba(232,120,104,.55) 40px,rgba(232,120,104,.55) 41.5px,transparent 41.5px),repeating-linear-gradient(to bottom,transparent 0,transparent 31px,#cfdcea 31px,#cfdcea 32px);background-attachment:local;border-radius:4px 4px 14px 14px;box-shadow:0 24px 64px rgba(0,0,0,.25);padding:64px 26px 32px 56px;line-height:32px;color:#222;-webkit-user-select:text;user-select:text;}
+.memo-date{position:absolute;top:22px;left:56px;font-size:11px;font-weight:600;line-height:20px;color:#9e9d99;}
+.memo-title{font-size:21px;font-weight:900;letter-spacing:-.5px;line-height:32px;color:#141412;word-break:keep-all;}
+.memo-body{font-size:15px;font-weight:500;line-height:32px;color:#33322f;white-space:pre-wrap;word-break:break-word;}
+.memo-empty{font-size:15px;line-height:32px;color:#9e9d99;}
+.memo-img{display:block;max-width:100%;margin:16px 0 8px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:zoom-in;}
+.memo-close{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;background:#141412;color:#fff;border:none;font-size:15px;font-weight:700;cursor:pointer;z-index:4;}
+.file-btn{display:flex;align-items:center;gap:10px;width:100%;height:32px;padding:0 2px;background:none;border:none;font-family:inherit;font-size:15px;font-weight:700;color:#141412;cursor:pointer;text-align:left;}
+.file-btn:hover{color:#1a5fb4;}
+.file-btn .fb-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+/* 관리자: 공지 · 수업자료 */
+.admin-panel{width:400px;max-height:90vh;overflow-y:auto;}
+.admin-sec{margin-top:22px;padding-top:18px;border-top:2px solid var(--text-primary);}
+.admin-sec-title{font-size:15px;font-weight:800;margin-bottom:4px;}
+.f-label{display:block;font-size:11px;font-weight:700;color:var(--text-secondary);margin:16px 0 6px;letter-spacing:.3px;}
+.f-input{display:block;width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:16px;outline:none;background:#fff;color:var(--text-primary);}
+.f-input:focus{border-color:#141412;}
+#nt-title{font-weight:800;}
+textarea.f-input{resize:vertical;min-height:130px;line-height:1.6;}
+.img-prev{display:none;max-width:100%;max-height:140px;margin-top:8px;border-radius:8px;border:1px solid var(--border);}
+.img-prev.show{display:block;}
+.f-row{display:flex;gap:8px;margin-top:10px;}
+.f-msg{font-size:11px;color:#c0392b;min-height:14px;margin-top:6px;}
+.file-item{display:flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;margin-top:6px;background:var(--bg);}
+.file-item .fi-text{flex:1;min-width:0;}
+.file-item .fi-name{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.file-item .fi-url{font-size:10px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.file-item button{flex-shrink:0;width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:12px;color:var(--text-secondary);}
+.file-empty{font-size:12px;color:var(--text-muted);padding:6px 0;}
+.hint{font-size:11px;color:var(--text-muted);line-height:1.7;margin-top:10px;}
+@media (max-width:620px){
+  .top-actions{position:static;justify-content:center;margin-bottom:22px;}
+  .pill-btn{padding:9px 18px;font-size:12px;}
+  .memo{padding:60px 20px 28px 50px;background-image:linear-gradient(90deg,transparent 36px,rgba(232,120,104,.55) 36px,rgba(232,120,104,.55) 37.5px,transparent 37.5px),repeating-linear-gradient(to bottom,transparent 0,transparent 31px,#cfdcea 31px,#cfdcea 32px);}
+  .memo-date{left:50px;}
+}
 @media (max-width:620px){header h1{font-size:28px;}}
 </style>
 </head>
@@ -81,6 +132,10 @@ footer{margin-top:40px;display:flex;align-items:center;gap:14px;}
 <div id="blocked"><div><b>접근할 수 없는 주소예요</b>이 페이지는 ODDMOON LAB 수업 페이지(oddmoonlab.github.io)에서만 사용할 수 있어요.<br><small style="color:#888">© 2026 ODDMOON LAB · 유여진 강사</small></div></div>
 
 <div id="view-hub">
+  <div class="top-actions" id="topActions">
+    <button class="pill-btn" id="notice-btn" type="button">✦ 공지 ✦<span class="new-dot"></span></button>
+    <button class="pill-btn" id="files-btn" type="button">[ 수업자료 ]</button>
+  </div>
   <header>
     <div class="title-wrap">
     <img class="brand-logo" src="data:image/png;base64,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" alt="ODDMOON LAB" draggable="false">
@@ -124,13 +179,16 @@ footer{margin-top:40px;display:flex;align-items:center;gap:14px;}
 <div class="overlay" id="pw-overlay">
   <div class="modal">
     <h2>선생님 관리 패널</h2>
-    <p>비밀번호를 입력하세요</p>
-    <input type="password" id="pw-input" inputmode="numeric" autocomplete="off" placeholder="· · · ·" maxlength="20">
-    <div class="error-msg" id="error-msg"></div>
-    <div class="modal-btns">
-      <button class="btn-primary" id="pw-ok">확인</button>
-      <button class="btn-secondary" id="pw-cancel">취소</button>
-    </div>
+    <p>선생님 계정으로 로그인하세요</p>
+    <form id="login-form" autocomplete="on">
+      <input type="email" id="login-email" autocomplete="username" placeholder="이메일" required>
+      <input type="password" id="pw-input" autocomplete="current-password" placeholder="비밀번호" required>
+      <div class="error-msg" id="error-msg"></div>
+      <div class="modal-btns">
+        <button class="btn-primary" id="pw-ok" type="submit">로그인</button>
+        <button class="btn-secondary" id="pw-cancel" type="button">취소</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -140,19 +198,59 @@ footer{margin-top:40px;display:flex;align-items:center;gap:14px;}
     <div class="admin-sub">카카오 작업실 메뉴만 켜고 꺼요 · 학생 화면에 최대 4초 안에 반영돼요</div>
     <div id="toggle-list"></div>
     <div class="admin-sync-status" id="admin-sync-status">상태 확인 중...</div>
+
+    <div class="admin-sec">
+      <div class="admin-sec-title">📢 공지 · 수업자료</div>
+      <div class="admin-sub" style="margin-bottom:6px">끄면 학생 화면에서 버튼이 회색으로 바뀌고 눌리지 않아요</div>
+      <div id="board-toggle-list"></div>
+
+      <label class="f-label" for="nt-title">공지 제목</label>
+      <input class="f-input" id="nt-title" maxlength="80" placeholder="예) 11월 12일 숙제 안내">
+      <label class="f-label" for="nt-body">내용</label>
+      <textarea class="f-input" id="nt-body" rows="6" placeholder="숙제, 준비물, 오늘 수업 안내 등을 적어 주세요"></textarea>
+      <label class="f-label" for="nt-img">이미지 주소 (선택)</label>
+      <input class="f-input" id="nt-img" placeholder="https://...">
+      <img class="img-prev" id="nt-img-prev" alt="">
+      <div class="f-msg" id="nt-msg"></div>
+      <div class="f-row"><button class="btn-primary" id="nt-save">공지 저장</button><button class="btn-secondary" id="nt-clear">공지 비우기</button></div>
+
+      <label class="f-label">수업자료 (클라우드 공유 주소)</label>
+      <div id="file-list"></div>
+      <input class="f-input" id="f-name" placeholder="자료 이름 (예: 3회차 브러시 세트)" style="margin-top:10px">
+      <input class="f-input" id="f-url" placeholder="https://drive.google.com/file/d/..." style="margin-top:6px">
+      <div class="f-msg" id="f-msg"></div>
+      <div class="f-row" style="margin-top:4px"><button class="btn-primary" id="f-add">+ 자료 추가</button></div>
+      <div class="hint">· 자료가 1개면 학생이 버튼을 누르자마자 바로 받아져요. 2개 이상이면 목록이 떠요.<br>· 구글 드라이브·드롭박스 공유 주소는 바로 받기 주소로 자동으로 바뀌어요. 드라이브는 공유를 ‘링크가 있는 모든 사용자’로 해 두세요.</div>
+      <div class="admin-sync-status" id="board-sync-status">공지 표 확인 중...</div>
+    </div>
+
     <button class="admin-close" id="admin-close">닫기</button>
+    <button class="admin-logout" id="admin-logout" type="button">로그아웃</button>
+  </div>
+</div>
+
+<div class="overlay" id="notice-overlay">
+  <div class="memo-wrap">
+    <button class="memo-close" data-close="notice-overlay" aria-label="닫기">✕</button>
+    <div class="memo" id="notice-memo"><div class="memo-date" id="notice-date"></div><div id="notice-content"></div></div>
+  </div>
+</div>
+
+<div class="overlay" id="files-overlay">
+  <div class="memo-wrap">
+    <button class="memo-close" data-close="files-overlay" aria-label="닫기">✕</button>
+    <div class="memo" id="files-memo"><div id="files-content"></div></div>
   </div>
 </div>
 
 <script>
 /* =====================================================
    🔧 관리자 설정
-   - 비밀번호, 메뉴 목록
+   - 메뉴 목록 (비밀번호는 코드에 없음 — Supabase 선생님 계정으로 로그인)
    - DOMAIN_LOCK: true면 oddmoonlab.github.io 에서만 열려요 (미리보기할 땐 false)
    - 이 작업실은 menu_state 표의 kakao-plan / kakao-outline / kakao-view 줄만 읽고 써요.
      (기존 우리반 작업실의 card-ogq 등과는 서로 영향 없음)
    ===================================================== */
-const ADMIN_PW = "0530";
 const DOMAIN_LOCK = true;
 const MENUS = [
   { id:'kakao-plan',    label:'기획노트',      file:'/kakaoplan/' },
@@ -202,51 +300,305 @@ const SUPABASE_ANON_KEY = "sb_publishable_1K_wet7KC7fq7aPn6vB5dQ_nldPYACn";
     } catch(e) { setSync(false); }
     $('hubGrid').style.visibility = 'visible';
   }
+  /* ── 선생님 로그인 (Supabase Auth) ── */
+  let session = null;
+  try { session = JSON.parse(sessionStorage.getItem('oddmoon-teacher') || 'null'); } catch(e) {}
+  const saveSession = () => { try { session ? sessionStorage.setItem('oddmoon-teacher', JSON.stringify(session)) : sessionStorage.removeItem('oddmoon-teacher'); } catch(e) {} };
+  async function authToken(grant, body){
+    const r = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=${grant}`, { method:'POST',
+      headers: { apikey: SUPABASE_ANON_KEY, 'Content-Type':'application/json' }, body: JSON.stringify(body) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.access_token) throw j;
+    session = { access_token: j.access_token, refresh_token: j.refresh_token, expires_at: Date.now() + (j.expires_in || 3600) * 1000 };
+    saveSession(); return session;
+  }
+  async function getToken(){
+    if (!session) return null;
+    if (Date.now() > session.expires_at - 60000) {
+      try { await authToken('refresh_token', { refresh_token: session.refresh_token }); }
+      catch(e) { session = null; saveSession(); return null; }
+    }
+    return session.access_token;
+  }
+  async function writeHeaders(){
+    const t = await getToken();
+    if (!t) { $('admin-overlay').classList.remove('active'); $('error-msg').textContent = '로그인이 끝났어요. 다시 로그인해 주세요.'; $('pw-overlay').classList.add('active'); throw new Error('login'); }
+    return { apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + t, 'Content-Type':'application/json', Prefer:'return=representation' };
+  }
+
   async function update(id, on){
     try {
-      const r = await fetch(`${SUPABASE_URL}/rest/v1/menu_state?id=eq.${id}`, { method:'PATCH', headers: {...headers, 'Content-Type':'application/json', Prefer:'return=representation'}, body: JSON.stringify({ is_open:on, updated_at:new Date().toISOString() }) });
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/menu_state?id=eq.${id}`, { method:'PATCH', headers: await writeHeaders(), body: JSON.stringify({ is_open:on, updated_at:new Date().toISOString() }) });
       if (!r.ok) throw new Error(r.status);
       const rows = await r.json(); setSync(rows.length > 0);
+      if (!rows.length) $('admin-sync-status').textContent = '🔴 저장 권한이 없어요 — 선생님 계정으로 로그인했는지 확인';
     } catch(e) { setSync(false); }
   }
+
+  let toastTimer = null;
+  function showToast(msg){
+    const t = $('copy-toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  /* =====================================================
+     📢 공지 · 수업자료 (Supabase class_board 표)
+     ===================================================== */
+  const blank = () => ({ is_open:true, title:'', body:'', image_url:'', links:[], updated_at:null });
+  const board = { 'kakao-notice': blank(), 'kakao-files': blank() };
+  let boardOk = null;
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const isHttp = u => /^https?:\/\/\S+$/i.test((u || '').trim());
+  const lsGet = k => { try { return localStorage.getItem(k); } catch(e) { return null; } };
+  const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} };
+  const hasNotice = n => !!(n.title.trim() || n.body.trim() || n.image_url.trim());
+  const stamp = n => { const s = [n.title, n.body, n.image_url].join('|'); let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return String(h); };
+
+  function driveId(url){
+    if (!/(^|\.)drive\.google\.com$/.test(url.hostname) || url.pathname.includes('/folders/')) return null;
+    return (url.pathname.match(/\/d\/([^/]+)/) || [])[1] || url.searchParams.get('id');
+  }
+  /* 공유 주소 → 바로 받기 주소 */
+  function toDownload(u){
+    try {
+      const url = new URL(u.trim()); const id = driveId(url);
+      if (id) return 'https://drive.google.com/uc?export=download&id=' + encodeURIComponent(id);
+      if (/(^|\.)dropbox\.com$/.test(url.hostname)) { url.searchParams.delete('raw'); url.searchParams.set('dl', '1'); }
+      return url.toString();
+    } catch(e) { return ''; }
+  }
+  /* 공유 주소 → 화면에 보이는 이미지 주소 */
+  function toImage(u){
+    try {
+      const url = new URL(u.trim()); const id = driveId(url);
+      if (id) return 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(id) + '&sz=w1600';
+      if (/(^|\.)dropbox\.com$/.test(url.hostname)) { url.searchParams.delete('dl'); url.searchParams.set('raw', '1'); }
+      return url.toString();
+    } catch(e) { return ''; }
+  }
+  function fmtDate(iso){
+    const d = new Date(iso); if (isNaN(d)) return '';
+    const w = '일월화수목금토'[d.getDay()];
+    return `${d.getMonth()+1}월 ${d.getDate()}일 (${w}) 업데이트`;
+  }
+  function setBoardRow(row){
+    if (!board[row.id]) return;
+    board[row.id] = { is_open: row.is_open !== false, title: row.title || '', body: row.body || '', image_url: row.image_url || '',
+      links: Array.isArray(row.links) ? row.links : [], updated_at: row.updated_at || null };
+  }
+  function applyBoard(){
+    const n = board['kakao-notice'], f = board['kakao-files'], nb = $('notice-btn'), fb = $('files-btn');
+    nb.classList.toggle('off', !n.is_open); nb.disabled = !n.is_open;
+    fb.classList.toggle('off', !f.is_open); fb.disabled = !f.is_open;
+    nb.classList.toggle('has-new', n.is_open && hasNotice(n) && lsGet('oddmoon-kakao-notice-seen') !== stamp(n));
+  }
+  function setBoardSync(){
+    const el = $('board-sync-status'); if (!el) return;
+    if (boardOk === null) { el.className = 'admin-sync-status'; el.textContent = '공지 표 확인 중...'; return; }
+    el.className = 'admin-sync-status ' + (boardOk ? 'ok' : 'off');
+    el.textContent = boardOk ? '🟢 공지·수업자료 연동됨 — 학생 화면에 최대 4초 안에 반영'
+                             : '🔴 class_board 표를 못 찾았어요 — Supabase에서 SQL을 먼저 실행해 주세요';
+  }
+  async function syncBoard(){
+    try {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/class_board?select=*&id=in.(kakao-notice,kakao-files)`, { headers });
+      if (!r.ok) throw new Error(r.status);
+      const rows = await r.json(); rows.forEach(setBoardRow);
+      boardOk = rows.length === 2;
+    } catch(e) { boardOk = false; }
+    applyBoard(); setBoardSync();
+    if ($('admin-overlay').classList.contains('active')) { renderBoardToggles(); renderFileList(); }
+    $('topActions').style.visibility = 'visible';
+  }
+  async function patchBoard(id, patch){
+    const body = { ...patch };
+    if ('title' in patch || 'links' in patch) body.updated_at = new Date().toISOString();
+    let ok = false;
+    try {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/class_board?id=eq.${id}`, { method:'PATCH',
+        headers: await writeHeaders(), body: JSON.stringify(body) });
+      if (!r.ok) throw new Error(r.status);
+      const rows = await r.json(); if (rows[0]) setBoardRow(rows[0]); ok = rows.length > 0;
+    } catch(e) { ok = false; }
+    boardOk = ok; setBoardSync(); applyBoard();
+    if (!ok) $('board-sync-status').textContent = '🔴 저장 실패 — 로그인 상태와 class_board 표를 확인해 주세요';
+    return ok;
+  }
+
+  /* ── 학생: 공지 메모지 ── */
+  function openNotice(){
+    const n = board['kakao-notice']; if (!n.is_open) return;
+    let html = '';
+    if (!hasNotice(n)) html = '<div class="memo-title">공지</div><div class="memo-empty">아직 올라온 공지가 없어요.</div>';
+    else {
+      if (n.title.trim()) html += `<div class="memo-title">${esc(n.title)}</div>`;
+      if (n.body.trim()) html += `<div class="memo-body">${esc(n.body.replace(/\s+$/, ''))}</div>`;
+      const img = isHttp(n.image_url) ? toImage(n.image_url) : '';
+      if (img) html += `<img class="memo-img" id="notice-img" src="${esc(img)}" alt="공지 이미지" referrerpolicy="no-referrer">`;
+    }
+    $('notice-content').innerHTML = html;
+    $('notice-date').textContent = hasNotice(n) && n.updated_at ? fmtDate(n.updated_at) : '';
+    const im = $('notice-img');
+    if (im) {
+      im.addEventListener('error', () => { const d = document.createElement('div'); d.className = 'memo-empty'; d.textContent = '이미지를 불러올 수 없어요.'; im.replaceWith(d); });
+      im.addEventListener('click', () => window.open(im.src, '_blank', 'noopener'));
+    }
+    if (hasNotice(n)) lsSet('oddmoon-kakao-notice-seen', stamp(n));
+    applyBoard();
+    $('notice-memo').scrollTop = 0;
+    $('notice-overlay').classList.add('active');
+  }
+
+  /* ── 학생: 수업자료 받기 ── */
+  let shownFiles = [];
+  function startDownload(u){
+    const href = toDownload(u); if (!href) return;
+    const a = document.createElement('a'); a.href = href; a.target = '_blank'; a.rel = 'noopener';
+    document.body.appendChild(a); a.click(); a.remove();
+    showToast('📥 수업자료를 받는 중이에요');
+  }
+  function openFiles(){
+    const f = board['kakao-files']; if (!f.is_open) return;
+    shownFiles = (f.links || []).filter(l => l && isHttp(l.url));
+    if (shownFiles.length === 1) { startDownload(shownFiles[0].url); return; }
+    let html = '<div class="memo-title">수업자료</div>';
+    html += shownFiles.length
+      ? shownFiles.map((l, i) => `<button class="file-btn" data-i="${i}"><span>⬇</span><span class="fb-name">${esc(l.name || ('자료 ' + (i+1)))}</span></button>`).join('')
+      : '<div class="memo-empty">아직 올라온 수업자료가 없어요.</div>';
+    $('files-content').innerHTML = html;
+    $('files-memo').scrollTop = 0;
+    $('files-overlay').classList.add('active');
+  }
+  $('files-content').addEventListener('click', e => {
+    const b = e.target.closest('.file-btn'); if (!b) return;
+    const l = shownFiles[+b.dataset.i]; if (l) startDownload(l.url);
+  });
+  $('notice-btn').addEventListener('click', openNotice);
+  $('files-btn').addEventListener('click', openFiles);
+  document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => $(b.dataset.close).classList.remove('active')));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') ['notice-overlay','files-overlay'].forEach(o => $(o).classList.remove('active')); });
+
+  /* ── 관리자: 공지 · 수업자료 편집 ── */
+  function renderBoardToggles(){
+    const rows = [['kakao-notice','공지 버튼'], ['kakao-files','수업자료 버튼']];
+    $('board-toggle-list').innerHTML = rows.map(([id, label]) => { const on = board[id].is_open;
+      return `<div class="menu-row"><div class="menu-info"><div class="menu-dot ${on?'on':''}"></div><div><div class="menu-name">${label}</div><div class="menu-file">${on?'활성 — 학생이 누를 수 있어요':'비활성 — 회색, 안 눌려요'}</div></div></div><label class="toggle"><input type="checkbox" data-board="${id}" ${on?'checked':''}><span class="slider"></span></label></div>`; }).join('');
+  }
+  function renderFileList(){
+    const links = board['kakao-files'].links || [];
+    $('file-list').innerHTML = links.length
+      ? links.map((l, i) => `<div class="file-item"><div class="fi-text"><div class="fi-name">${esc(l.name || '수업자료')}</div><div class="fi-url">${esc(l.url)}</div></div><button data-test="${i}" title="받아보기">↗</button><button data-del="${i}" title="삭제">✕</button></div>`).join('')
+      : '<div class="file-empty">아직 등록된 자료가 없어요.</div>';
+  }
+  function previewImg(){
+    const v = $('nt-img').value.trim(), p = $('nt-img-prev');
+    if (isHttp(v)) { p.src = toImage(v); p.classList.add('show'); } else { p.removeAttribute('src'); p.classList.remove('show'); }
+  }
+  $('nt-img-prev').addEventListener('error', () => { $('nt-img-prev').classList.remove('show'); if ($('nt-img').value.trim()) $('nt-msg').textContent = '이미지를 불러올 수 없어요. 주소를 확인해 주세요.'; });
+  $('nt-img-prev').addEventListener('load', () => { $('nt-msg').textContent = ''; });
+  $('nt-img').addEventListener('input', previewImg);
+  function fillBoardAdmin(){
+    const n = board['kakao-notice'];
+    $('nt-title').value = n.title; $('nt-body').value = n.body; $('nt-img').value = n.image_url;
+    $('nt-msg').textContent = ''; $('f-msg').textContent = '';
+    previewImg(); renderBoardToggles(); renderFileList();
+  }
+  $('board-toggle-list').addEventListener('change', e => {
+    const id = e.target.dataset.board; if (!id) return;
+    const on = e.target.checked;
+    board[id].is_open = on; applyBoard(); renderBoardToggles(); patchBoard(id, { is_open: on });
+  });
+  $('nt-save').addEventListener('click', async () => {
+    const btn = $('nt-save'), img = $('nt-img').value.trim();
+    if (img && !isHttp(img)) { $('nt-msg').textContent = '이미지 주소는 https:// 로 시작해야 해요.'; return; }
+    btn.disabled = true; btn.textContent = '저장 중...';
+    const ok = await patchBoard('kakao-notice', { title: $('nt-title').value.trim(), body: $('nt-body').value, image_url: img });
+    btn.textContent = ok ? '저장됨 ✓' : '저장 실패 — 다시 눌러 주세요';
+    setTimeout(() => { btn.textContent = '공지 저장'; btn.disabled = false; }, 1600);
+  });
+  $('nt-clear').addEventListener('click', async () => {
+    if (!confirm('공지 제목·내용·이미지를 모두 지울까요?')) return;
+    $('nt-title').value = ''; $('nt-body').value = ''; $('nt-img').value = ''; previewImg();
+    const ok = await patchBoard('kakao-notice', { title:'', body:'', image_url:'' });
+    $('nt-msg').textContent = ok ? '' : '지우기 실패 — 연결 상태를 확인해 주세요.';
+  });
+  $('f-add').addEventListener('click', async () => {
+    const name = $('f-name').value.trim(), url = $('f-url').value.trim();
+    if (!isHttp(url)) { $('f-msg').textContent = 'https:// 로 시작하는 공유 주소를 넣어 주세요.'; return; }
+    const ok = await patchBoard('kakao-files', { links: [...board['kakao-files'].links, { name: name || '수업자료', url }] });
+    if (ok) { $('f-name').value = ''; $('f-url').value = ''; $('f-msg').textContent = ''; }
+    else $('f-msg').textContent = '저장 실패 — 연결 상태를 확인해 주세요.';
+    renderFileList();
+  });
+  $('file-list').addEventListener('click', async e => {
+    const links = board['kakao-files'].links || [];
+    const t = e.target.closest('[data-test]'); if (t) { const l = links[+t.dataset.test]; if (l) startDownload(l.url); return; }
+    const d = e.target.closest('[data-del]'); if (!d) return;
+    const i = +d.dataset.del, l = links[i]; if (!l) return;
+    if (!confirm(`'${l.name || '수업자료'}' 자료를 목록에서 지울까요?`)) return;
+    const ok = await patchBoard('kakao-files', { links: links.filter((_, k) => k !== i) });
+    if (!ok) $('f-msg').textContent = '삭제 실패 — 연결 상태를 확인해 주세요.';
+    renderFileList();
+  });
 
   /* ── 이메일 복사 ── */
   $('email-btn').addEventListener('click', async () => {
     const MAIL = 'oddmoonillust@naver.com'; let ok = false;
     try { await navigator.clipboard.writeText(MAIL); ok = true; } catch(e) {}
     if (!ok) { const ta = document.createElement('textarea'); ta.value = MAIL; ta.style.cssText='position:fixed;opacity:0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch(e) {} ta.remove(); }
-    const t = $('copy-toast'); t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200);
+    showToast('✅ 이메일 주소가 복사되었습니다 — ' + MAIL);
   });
   /* ── 인스타 (기존 작업실과 같은 설정을 따라감) ── */
   document.querySelector('.ig-link').addEventListener('click', e => { e.preventDefault(); if (state['instagram-link']) window.open(e.currentTarget.dataset.igHref, '_blank', 'noopener'); });
 
   /* ── 관리자 ── */
   const pwIn = $('pw-input');
-  $('unlock-btn').addEventListener('click', () => { $('pw-overlay').classList.add('active'); setTimeout(() => pwIn.focus(), 80); });
+  $('unlock-btn').addEventListener('click', async () => {
+    if (await getToken()) { openAdmin(); return; }   /* 이미 로그인돼 있으면 바로 열기 */
+    $('pw-overlay').classList.add('active'); setTimeout(() => ($('login-email').value ? pwIn : $('login-email')).focus(), 80);
+  });
   const closePw = () => { $('pw-overlay').classList.remove('active'); pwIn.value=''; $('error-msg').textContent=''; };
   $('pw-cancel').addEventListener('click', closePw);
-  const confirmPw = () => {
-    if (pwIn.value === ADMIN_PW) { closePw(); openAdmin(); }
-    else { pwIn.classList.add('shake'); $('error-msg').textContent='비밀번호가 올바르지 않습니다.'; pwIn.value=''; setTimeout(() => pwIn.classList.remove('shake'), 350); }
-  };
-  $('pw-ok').addEventListener('click', confirmPw);
-  pwIn.addEventListener('keydown', e => { if (e.key === 'Enter') confirmPw(); });
+  $('login-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = $('login-email').value.trim(), pw = pwIn.value, btn = $('pw-ok');
+    if (!email || !pw) return;
+    btn.disabled = true; btn.textContent = '확인 중...'; $('error-msg').textContent = '';
+    try { await authToken('password', { email, password: pw }); closePw(); openAdmin(); }
+    catch(err) {
+      pwIn.classList.add('shake'); pwIn.value = ''; setTimeout(() => pwIn.classList.remove('shake'), 350);
+      $('error-msg').textContent = (err && err.error_code === 'invalid_credentials') || (err && /invalid/i.test(err.msg || err.error_description || '')) ? '이메일 또는 비밀번호가 올바르지 않아요.' : '로그인할 수 없어요. 잠시 뒤 다시 해 주세요.';
+    }
+    btn.disabled = false; btn.textContent = '로그인';
+  });
+  $('admin-logout').addEventListener('click', async () => {
+    const t = session && session.access_token;
+    session = null; saveSession();
+    if (t) fetch(`${SUPABASE_URL}/auth/v1/logout`, { method:'POST', headers: { apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + t } }).catch(() => {});
+    $('admin-overlay').classList.remove('active'); showToast('🔒 로그아웃했어요');
+  });
   function refreshToggles(){
     MENUS.forEach(m => { const t = $('tg-'+m.id), d = $('dot-'+m.id); if (t) t.checked = !!state[m.id]; if (d) d.className = 'menu-dot' + (state[m.id] ? ' on' : ''); });
   }
-  function openAdmin(){
+  async function openAdmin(){
     $('toggle-list').innerHTML = MENUS.map(m => `<div class="menu-row"><div class="menu-info"><div class="menu-dot ${state[m.id]?'on':''}" id="dot-${m.id}"></div><div><div class="menu-name">${m.label}</div><div class="menu-file">${m.file}</div></div></div><label class="toggle"><input type="checkbox" id="tg-${m.id}" data-id="${m.id}" ${state[m.id]?'checked':''}><span class="slider"></span></label></div>`).join('');
     $('admin-overlay').classList.add('active'); sync();
+    const lock = ['nt-title','nt-body','nt-img','nt-save','nt-clear','f-add'];
+    lock.forEach(id => $(id).disabled = true);
+    renderBoardToggles(); renderFileList(); boardOk = null; setBoardSync();
+    await syncBoard(); fillBoardAdmin(); /* 최신 공지를 먼저 불러온 뒤 칸을 채움 (빈칸으로 덮어쓰기 방지) */
+    lock.forEach(id => $(id).disabled = false);
   }
   $('toggle-list').addEventListener('change', e => {
     const id = e.target.dataset.id; if (!id) return;
     state[id] = e.target.checked; refreshToggles(); applyVisibility(); update(id, e.target.checked);
   });
   $('admin-close').addEventListener('click', () => $('admin-overlay').classList.remove('active'));
-  ['pw-overlay','admin-overlay'].forEach(o => $(o).addEventListener('click', e => { if (e.target.id === o) $(o).classList.remove('active'); }));
+  ['pw-overlay','admin-overlay','notice-overlay','files-overlay'].forEach(o => $(o).addEventListener('click', e => { if (e.target.id === o) $(o).classList.remove('active'); }));
 
   applyVisibility(); sync(); setInterval(sync, 4000);
-  setTimeout(() => { $('hubGrid').style.visibility = 'visible'; }, 2500); /* 연결이 늦어도 2.5초 뒤엔 보여줌 */
+  applyBoard(); syncBoard(); setInterval(syncBoard, 4000);
+  setTimeout(() => { $('hubGrid').style.visibility = 'visible'; $('topActions').style.visibility = 'visible'; }, 2500); /* 연결이 늦어도 2.5초 뒤엔 보여줌 */
 })();
 </script>
 </body>
