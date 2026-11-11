@@ -265,7 +265,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_1K_wet7KC7fq7aPn6vB5dQ_nldPYACn";
 
 (function(){
   /* ── 복제 방지 · 주소 잠금 ── */
-  const okHost = location.protocol === 'file:' || location.hostname === 'oddmoonlab.github.io';
+  const okHost = location.hostname === 'oddmoonlab.github.io';
   if (DOMAIN_LOCK && !okHost) { document.getElementById('blocked').style.display = 'grid'; return; }
   const isField = el => el && /^(INPUT|TEXTAREA)$/.test(el.tagName);
   document.addEventListener('contextmenu', e => { if (!isField(e.target)) e.preventDefault(); });
