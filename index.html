@@ -209,7 +209,10 @@ textarea.f-input{resize:vertical;min-height:130px;line-height:1.6;}
       <label class="f-label" for="nt-body">내용</label>
       <textarea class="f-input" id="nt-body" rows="6" placeholder="숙제, 준비물, 오늘 수업 안내 등을 적어 주세요"></textarea>
       <label class="f-label" for="nt-img">이미지 주소 (선택)</label>
-      <input class="f-input" id="nt-img" placeholder="https://...">
+      <input class="f-input" id="nt-img" placeholder="https://... (또는 아래 버튼으로 사진 올리기)">
+        <div class="f-row" style="margin-top:6px"><button class="btn-secondary" id="nt-upload" type="button">📷 사진 올리기</button></div>
+        <input type="file" id="nt-file" accept="image/*" hidden>
+        <div class="f-msg" id="nt-up-msg"></div>
       <img class="img-prev" id="nt-img-prev" alt="">
       <div class="f-msg" id="nt-msg"></div>
       <div class="f-row"><button class="btn-primary" id="nt-save">공지 저장</button><button class="btn-secondary" id="nt-clear">공지 비우기</button></div>
@@ -541,6 +544,46 @@ const SUPABASE_ANON_KEY = "sb_publishable_1K_wet7KC7fq7aPn6vB5dQ_nldPYACn";
     renderFileList();
   });
 
+
+  /* ── 📷 공지 사진 올리기 (Supabase 저장 공간 notice-images) ── */
+  async function shrinkImage(file){
+    if (file.type === 'image/gif' || file.type === 'image/svg+xml') return file;   /* 움짤은 그대로 */
+    const img = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = URL.createObjectURL(file); });
+    const MAX = 1600, sc = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+    if (sc === 1 && file.size < 1.5e6) { URL.revokeObjectURL(img.src); return file; }
+    const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * sc); c.height = Math.round(img.naturalHeight * sc);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(img.src);
+    const blob = await new Promise(r => c.toBlob(r, file.type === 'image/png' ? 'image/png' : 'image/jpeg', 0.88));
+    return blob || file;
+  }
+  function upMsg(text, ok){ const m = document.getElementById('nt-up-msg'); m.style.color = ok ? '#1a7a4a' : ''; m.textContent = text; }
+  document.getElementById('nt-upload').addEventListener('click', () => document.getElementById('nt-file').click());
+  document.getElementById('nt-file').addEventListener('change', async e => {
+    const file = e.target.files && e.target.files[0]; e.target.value = ''; if (!file) return;
+    if (!/^image\//.test(file.type || 'image/')) { upMsg('그림 파일만 올릴 수 있어요.'); return; }
+    const btn = document.getElementById('nt-upload'); btn.disabled = true; btn.textContent = '올리는 중...'; upMsg('');
+    try {
+      const blob = await shrinkImage(file).catch(() => file);
+      if (blob.size > 5 * 1024 * 1024) throw new Error('size');
+      const ext = ({'image/png':'png','image/jpeg':'jpg','image/gif':'gif','image/webp':'webp'})[blob.type] || 'jpg';
+      const path = `kakao/${Date.now()}.${ext}`;
+      const url = await uploadNoticeImage(path, blob);
+      document.getElementById('nt-img').value = url; previewImg();
+      upMsg('✓ 사진을 올렸어요 — 「공지 저장」을 눌러야 학생에게 보여요', true);
+    } catch(err) {
+      upMsg(err && err.message === 'size' ? '사진이 너무 커요 (5MB 이하만 가능)' : '사진 올리기 실패 — 로그인 상태와 사진 저장 공간 설정(SQL)을 확인해 주세요');
+    }
+    btn.disabled = false; btn.textContent = '📷 사진 올리기';
+  });
+
+  async function uploadNoticeImage(path, blob){
+    const t = await getToken(); if (!t) throw new Error('login');
+    const r = await fetch(`${SUPABASE_URL}/storage/v1/object/notice-images/${path}`, { method:'POST',
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + t, 'Content-Type': blob.type || 'application/octet-stream', 'x-upsert': 'false' }, body: blob });
+    if (!r.ok) throw new Error('upload ' + r.status);
+    return `${SUPABASE_URL}/storage/v1/object/public/notice-images/${path}`;
+  }
+
   /* ── 이메일 복사 ── */
   $('email-btn').addEventListener('click', async () => {
     const MAIL = 'oddmoonillust@naver.com'; let ok = false;
@@ -583,7 +626,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_1K_wet7KC7fq7aPn6vB5dQ_nldPYACn";
   async function openAdmin(){
     $('toggle-list').innerHTML = MENUS.map(m => `<div class="menu-row"><div class="menu-info"><div class="menu-dot ${state[m.id]?'on':''}" id="dot-${m.id}"></div><div><div class="menu-name">${m.label}</div><div class="menu-file">${m.file}</div></div></div><label class="toggle"><input type="checkbox" id="tg-${m.id}" data-id="${m.id}" ${state[m.id]?'checked':''}><span class="slider"></span></label></div>`).join('');
     $('admin-overlay').classList.add('active'); sync();
-    const lock = ['nt-title','nt-body','nt-img','nt-save','nt-clear','f-add'];
+    const lock = ['nt-title','nt-body','nt-img','nt-save','nt-clear','f-add','nt-upload'];
     lock.forEach(id => $(id).disabled = true);
     renderBoardToggles(); renderFileList(); boardOk = null; setBoardSync();
     await syncBoard(); fillBoardAdmin(); /* 최신 공지를 먼저 불러온 뒤 칸을 채움 (빈칸으로 덮어쓰기 방지) */
